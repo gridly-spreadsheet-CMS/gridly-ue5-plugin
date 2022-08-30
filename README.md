@@ -16,7 +16,7 @@ Download the Gridly plugin itself, as well as the sample project to get you star
 
 - [Gridly UE5 Plugin](https://github.com/gridly-spreadsheet-CMS/Gridly-ue5-Plugin)
 
-The sample project is optional, but provides a working example project for reference that has a very basic user interface set up for localization in UE4.
+The sample project is optional, but provides a working example project for reference that has a very basic user interface set up for localization in UE5.
 
 ### Setting up a Project for Localization
 
@@ -116,7 +116,7 @@ You need to select a Structure data type for each row (or a `USTRUCT` that inher
 
 ![Set Gridly Data Table View ID](Documentation/SetGridlyDataTableViewId.png)
 
-For the plugin to map the data correctly between Gridly and UE4, the variable names of the Structure needs to be named the exact same as the column IDs of the view you are synchronizing with. Create an empty grid on Gridly and create columns with column IDs that match your Structure variables.
+For the plugin to map the data correctly between Gridly and UE5, the variable names of the Structure needs to be named the exact same as the column IDs of the view you are synchronizing with. Create an empty grid on Gridly and create columns with column IDs that match your Structure variables.
 
 ![Create Gridly Data Grid](Documentation/CreateGridlyDataGrid.png)
 
