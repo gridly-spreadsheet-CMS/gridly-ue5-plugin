@@ -45,6 +45,21 @@ bool FGridlyExporter::ConvertToJson(const TArray<FPolyglotTextData>& PolyglotTex
 		{
 			RowJsonObject->SetStringField("id", Key);
 		}
+		// Add context as a new key-value pair at the id level
+		if (ItemContext && GameSettings->bExportContext)
+		{
+			// Get the source location
+			FString SourceLocation = ItemContext->SourceLocation.Replace(TEXT(" - line "), TEXT(":"), ESearchCase::CaseSensitive);
+
+			// Check if the first character is a forward slash and remove it
+			if (SourceLocation.StartsWith(TEXT("/")))
+			{
+				SourceLocation = SourceLocation.RightChop(1);  // Remove the first character
+			}
+
+			// Create a new key for context using *GameSettings->ContextColumnId and assign the value
+			RowJsonObject->SetStringField(*GameSettings->ContextColumnId, SourceLocation);
+		}
 
 		// Set namespace/path
 
@@ -80,7 +95,7 @@ bool FGridlyExporter::ConvertToJson(const TArray<FPolyglotTextData>& PolyglotTex
 
 			// Add context
 
-			if (ItemContext && GameSettings->bExportContext)
+			if (ItemContext && GameSettings->bExportContext && !GameSettings->ContextColumnId.Equals(TEXT("path")))
 			{
 				TSharedPtr<FJsonObject> CellJsonObject = MakeShareable(new FJsonObject);
 				CellJsonObject->SetStringField("columnId", *GameSettings->ContextColumnId);
@@ -88,6 +103,7 @@ bool FGridlyExporter::ConvertToJson(const TArray<FPolyglotTextData>& PolyglotTex
 					ItemContext->SourceLocation.Replace(TEXT(" - line "), TEXT(":"), ESearchCase::CaseSensitive));
 				CellsJsonArray.Add(MakeShareable(new FJsonValueObject(CellJsonObject)));
 			}
+
 
 			// Add metadata
 

@@ -115,6 +115,7 @@ bool FGridlyLocalizedTextConverter::WritePoFile(const TArray<FPolyglotTextData>&
 	const FString& Path)
 {
 	TArray<FString> Lines;
+	TArray<TCHAR> CharsToReplace = { TEXT('\n'), TEXT('\r'), TEXT('\t'), TEXT('"'), TEXT('\\') };
 
 	for (int i = 0; i < PolyglotTextDatas.Num(); i++)
 	{
@@ -125,10 +126,24 @@ bool FGridlyLocalizedTextConverter::WritePoFile(const TArray<FPolyglotTextData>&
 			Lines.Add(FString::Printf(TEXT("msgctxt \"%s,%s\""), *PolyglotTextDatas[i].GetNamespace(),
 				*PolyglotTextDatas[i].GetKey()));
 
-			FString NativeString = PolyglotTextDatas[i].GetNativeString().ReplaceCharWithEscapedChar();
+
+			FString NativeString = PolyglotTextDatas[i].GetNativeString().ReplaceCharWithEscapedChar(&CharsToReplace);
 			Lines.Add(FString::Printf(TEXT("msgid \"%s\""), *NativeString));
 
 			TargetString = ConditionArchiveStrForPO(TargetString);
+			Lines.Add(FString::Printf(TEXT("msgstr \"%s\""), *TargetString));
+			Lines.Add(TEXT(""));
+		}
+		else {
+			Lines.Add(FString::Printf(TEXT("msgctxt \"%s,%s\""), *PolyglotTextDatas[i].GetNamespace(),
+				*PolyglotTextDatas[i].GetKey()));
+
+
+			FString NativeString = PolyglotTextDatas[i].GetNativeString().ReplaceCharWithEscapedChar(&CharsToReplace);
+			Lines.Add(FString::Printf(TEXT("msgid \"%s\""), *NativeString));
+
+			TargetString = TEXT("");
+			TargetString = TargetString.ReplaceCharWithEscapedChar(&CharsToReplace);
 			Lines.Add(FString::Printf(TEXT("msgstr \"%s\""), *TargetString));
 
 			Lines.Add(TEXT(""));
